@@ -7,19 +7,15 @@ This application is built with **Node.js, Express, and SQL (SQLite / MySQL ready
 
 ## 1. Database Architecture & Recommendation
 
-You asked: *"what abt db.. use the convenient, need to host in as sub domain of frontierwox.in. , i think sql will be better."*
-
-### Recommendation: SQLite (Built-in Standard SQL)
-- **Why it is the most convenient:**
-  - SQLite **is a complete SQL database engine** (`hackfest.db`). It executes standard ANSI SQL (`SELECT`, `INSERT`, `UPDATE`, `JOIN`).
+- **Recommendation (Active by Default): SQLite (`hackfest.db`)**
+  - SQLite **is a complete SQL database engine**. It executes standard ANSI SQL (`SELECT`, `INSERT`, `UPDATE`, `JOIN`).
   - **Zero configuration:** No need to install MySQL server, create database users, grant permissions, or manage connection strings.
   - **Single-file backups:** To back up all team data and registrations, simply copy the `hackfest.db` file.
   - **High Performance:** Capable of handling thousands of requests per second with sub-millisecond local disk queries.
   - **Zero Maintenance:** It is already embedded, self-migrating, and active in `server.js`.
 
-### Alternative: MySQL / MariaDB (via `schema.sql`)
-- If your hosting server at `frontierwox.in` runs cPanel with phpMyAdmin or a dedicated MySQL database:
-  - We have created [`schema.sql`](schema.sql) in this directory.
+- **Alternative: MySQL / MariaDB (via `schema.sql`)**
+  - If your hosting server at `frontierwox.in` runs cPanel with phpMyAdmin:
   - Simply open **phpMyAdmin**, create a database (e.g. `frontier_hackfest`), and import [`schema.sql`](schema.sql).
 
 ---
@@ -49,7 +45,8 @@ npm install -g pm2
 Upload the project folder to `/var/www/hackfest`:
 ```bash
 sudo mkdir -p /var/www/hackfest
-# Copy project files here using SCP, SFTP, or Git
+# Clone or copy project files here
+git clone https://github.com/ajayjames027/com_ca.git /var/www/hackfest
 cd /var/www/hackfest
 npm install --production
 ```
@@ -95,7 +92,6 @@ sudo systemctl reload nginx
 sudo apt install -y certbot python3-certbot-nginx
 sudo certbot --nginx -d hackfest.frontierwox.in
 ```
-Certbot will automatically configure HTTPS and auto-renew the SSL certificate!
 
 ---
 
@@ -107,7 +103,7 @@ If `frontierwox.in` is hosted on a cPanel server:
 3. Go to **Software** -> **Setup Node.js App**:
    - **Node.js Version:** 18.x or 20.x
    - **Application Mode:** Production
-   - **Application Root:** `hackfest` (or path where files are uploaded)
+   - **Application Root:** `hackfest`
    - **Application URL:** `hackfest.frontierwox.in`
    - **Application Startup File:** `server.js`
 4. Upload all files into the application directory.
@@ -117,22 +113,11 @@ If `frontierwox.in` is hosted on a cPanel server:
 
 ---
 
-## 5. Environment Variables & Admin Security
+## 5. Organizing Body & Attribution
 
-You can configure custom port or credentials by setting environment variables in a `.env` file or server environment:
-
-| Variable | Default Value | Description |
-|---|---|---|
-| `PORT` | `3000` | Server listening port |
-| `ADMIN_USER` | `admin` | Admin panel login username |
-| `ADMIN_PASS` | `admin123` | Admin panel login password |
-
----
-
-## 6. Contacts & Organizing Details Configured in Site
-
-- **Host Institution:** Department of Computer Science & Department of Commerce Computer Applications (B.Com CA), St. Joseph's College (Autonomous), Tiruchirappalli
-- **Industry Partner:** FrontierWox Tech Private Limited (`frontierwox.in`)
+- **Host Institution:** St. Joseph's College (Autonomous), Tiruchirappalli - 620 002, Tamil Nadu
+- **Organized Exclusively By:** Department of Commerce Computer Applications (B.Com CA)
+- **Technical Development:** Developed by FrontierWox Tech Private Limited (`frontierwox.in`)
 - **Staff Co-ordinator:** Dr. B. Fatimamary (📞 96294 82064)
 - **Student Co-ordinators:**
   - Mohamed Ismail K S (📞 63818 98996)

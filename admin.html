@@ -8,7 +8,7 @@
     <style>
         body { overflow-y: auto; }
         .admin-wrapper { max-width: 1350px; margin: 40px auto 60px; padding: 0 4%; }
-        .table-container { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; overflow: hidden; }
+        .table-container { background: #ffffff; border: 1px solid var(--border-subtle); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-sm); }
         .btn-sm { padding: 6px 12px; font-size: 0.78rem; border-radius: 6px; }
         .action-cell { display: flex; gap: 6px; flex-wrap: wrap; }
     </style>
@@ -28,7 +28,7 @@
             <div class="brand-details">
                 <span class="brand-title">HACKFEST <span class="year">'26</span></span>
                 <span class="brand-college">St. Joseph's College (Autonomous)</span>
-                <span class="brand-dept">Organizing Committee Console</span>
+                <span class="brand-dept">Dept. of Commerce Computer Applications</span>
             </div>
         </a>
 
@@ -41,9 +41,9 @@
 
     <div class="admin-wrapper">
         <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
-            <span class="badge-tag">Verification Portal</span>
+            <span class="badge-tag">Verification Console</span>
             <h2>Team Registrations &amp; Payment Verification</h2>
-            <p>Review submitted candidate information, verify payment proof, and authorize official campus entry passes.</p>
+            <p>Department of Commerce Computer Applications • Review candidate entries, verify payments, and authorize campus entry passes.</p>
         </div>
 
         <!-- Metric KPI Cards -->
@@ -188,11 +188,11 @@
                 return `
                     <tr>
                         <td>
-                            <strong style="color: var(--primary); font-family: 'Outfit';">${passId}</strong>
-                            <div style="font-size: 0.72rem; color: var(--text-muted);">#${t.id}</div>
+                            <strong style="color: var(--primary); font-family: 'Outfit'; font-size: 1rem;">${passId}</strong>
+                            <div style="font-size: 0.74rem; color: var(--text-muted);">#${t.id}</div>
                         </td>
                         <td>
-                            <strong style="color: #fff; font-size: 0.95rem;">${escapeHtml(t.team_name)}</strong>
+                            <strong style="color: var(--text-main); font-size: 0.95rem;">${escapeHtml(t.team_name)}</strong>
                             <div style="font-size: 0.8rem; color: var(--text-muted);">${escapeHtml(t.college)}</div>
                         </td>
                         <td>
@@ -202,14 +202,14 @@
                         </td>
                         <td style="font-size: 0.82rem; line-height: 1.4;">
                             <strong>${escapeHtml(t.leader_name)}</strong><br>
-                            <span style="color: var(--text-muted);">${escapeHtml(t.leader_dept || 'CS')}</span><br>
+                            <span style="color: var(--text-muted);">${escapeHtml(t.leader_dept || 'Commerce CA')}</span><br>
                             <a href="tel:${t.leader_phone}" style="color: var(--primary); text-decoration: none;">📞 ${t.leader_phone || 'N/A'}</a><br>
                             <span style="font-size: 0.74rem; color: var(--text-muted);">${escapeHtml(t.leader_email)}</span>
                         </td>
                         <td style="font-size: 0.82rem; line-height: 1.4;">
                             <strong>${escapeHtml(t.member2_name)}</strong><br>
-                            <span style="color: var(--text-muted);">${escapeHtml(t.member2_dept || 'Commerce CA')}</span><br>
-                            <a href="tel:${t.member2_phone}" style="color: #a5b4fc; text-decoration: none;">📞 ${t.member2_phone || 'N/A'}</a><br>
+                            <span style="color: var(--text-muted);">${escapeHtml(t.member2_dept || 'Computer Science')}</span><br>
+                            <a href="tel:${t.member2_phone}" style="color: var(--secondary); text-decoration: none;">📞 ${t.member2_phone || 'N/A'}</a><br>
                             <span style="font-size: 0.74rem; color: var(--text-muted);">${escapeHtml(t.member2_email)}</span>
                         </td>
                         <td>
@@ -231,9 +231,9 @@
                                     <button class="btn btn-primary btn-sm" onclick="approveTeam(${t.id})">✓ Approve</button>
                                 ` : ''}
                                 ${t.status !== 'rejected' ? `
-                                    <button class="btn btn-outline btn-sm" style="color: var(--danger); border-color: rgba(239, 68, 68, 0.4);" onclick="rejectTeam(${t.id})">✕ Reject</button>
+                                    <button class="btn btn-outline btn-sm" style="color: var(--danger); border-color: #fecaca;" onclick="rejectTeam(${t.id})">✕ Reject</button>
                                 ` : ''}
-                                <button class="btn btn-outline btn-sm" style="color: #94a3b8; border-color: rgba(255,255,255,0.12);" onclick="deleteTeam(${t.id}, '${escapeHtml(t.team_name)}')">🗑️</button>
+                                <button class="btn btn-outline btn-sm" style="color: #64748b; border-color: var(--border-subtle);" onclick="deleteTeam(${t.id}, '${escapeHtml(t.team_name)}')">🗑️</button>
                             </div>
                         </td>
                     </tr>
