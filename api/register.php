@@ -25,6 +25,7 @@ try {
     $member2Phone= trim($_POST['member2Phone'] ?? '');
     $member2Dept = trim($_POST['member2Dept'] ?? 'Commerce Computer Applications');
     $paymentRef  = trim($_POST['paymentRef'] ?? '');
+    $paymentRef2 = trim($_POST['paymentRef2'] ?? $paymentRef);
 
     // Validation
     if (empty($teamName) || empty($password) || empty($college) ||
@@ -37,45 +38,62 @@ try {
         jsonResponse(['error' => 'Please enter valid email addresses for both participants.'], 400);
     }
 
-    // Handle Payment Receipt Upload
+    // Handle Payment Receipt 1 (Participant 1 / Leader)
     if (!isset($_FILES['payment_pic']) || $_FILES['payment_pic']['error'] !== UPLOAD_ERR_OK) {
-        jsonResponse(['error' => 'Payment receipt screenshot is required. Please upload your proof of payment.'], 400);
+        jsonResponse(['error' => 'Participant 1 payment receipt screenshot is required.'], 400);
     }
 
-    $file = $_FILES['payment_pic'];
     $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'pdf', 'gif'];
-    $fileInfo = pathinfo($file['name']);
-    $extension = strtolower($fileInfo['extension'] ?? '');
-
-    if (!in_array($extension, $allowedExtensions)) {
-        jsonResponse(['error' => 'Invalid file type. Please upload an image (JPG, PNG, WEBP) or PDF receipt.'], 400);
-    }
-
-    if ($file['size'] > 10 * 1024 * 1024) {
-        jsonResponse(['error' => 'File size exceeds limit (Max 10MB).'], 400);
-    }
-
     $uploadDir = __DIR__ . '/../uploads/';
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0755, true);
     }
 
-    $fileName = 'payment-' . time() . '-' . mt_rand(100000, 999999) . '.' . $extension;
-    $targetPath = $uploadDir . $fileName;
+    // Process Receipt 1
+    $file1 = $_FILES['payment_pic'];
+    $ext1 = strtolower(pathinfo($file1['name'], PATHINFO_EXTENSION));
+    if (!in_array($ext1, $allowedExtensions)) {
+        jsonResponse(['error' => 'Invalid file type for Receipt 1. Please upload an image (JPG, PNG, WEBP) or PDF.'], 400);
+    }
+    if ($file1['size'] > 10 * 1024 * 1024) {
+        jsonResponse(['error' => 'Receipt 1 file size exceeds limit (Max 10MB).'], 400);
+    }
+    $fileName1 = 'payment1-' . time() . '-' . mt_rand(100000, 999999) . '.' . $ext1;
+    $targetPath1 = $uploadDir . $fileName1;
+    if (!move_uploaded_file($file1['tmp_name'], $targetPath1)) {
+        jsonResponse(['error' => 'Failed to save Receipt 1. Please check server folder permissions.'], 500);
+    }
 
-    if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
-        jsonResponse(['error' => 'Failed to save uploaded receipt. Please check folder permissions.'], 500);
+    // Process Receipt 2 (Participant 2 - if provided or fallback to receipt 1)
+    $fileName2 = $fileName1;
+    if (isset($_FILES['payment_pic2']) && $_FILES['payment_pic2']['error'] === UPLOAD_ERR_OK) {
+        $file2 = $_FILES['payment_pic2'];
+        $ext2 = strtolower(pathinfo($file2['name'], PATHINFO_EXTENSION));
+        if (!in_array($ext2, $allowedExtensions)) {
+            jsonResponse(['error' => 'Invalid file type for Receipt 2. Please upload an image (JPG, PNG, WEBP) or PDF.'], 400);
+        }
+        if ($file2['size'] > 10 * 1024 * 1024) {
+            jsonResponse(['error' => 'Receipt 2 file size exceeds limit (Max 10MB).'], 400);
+        }
+        $fileName2 = 'payment2-' . time() . '-' . mt_rand(100000, 999999) . '.' . $ext2;
+        $targetPath2 = $uploadDir . $fileName2;
+        if (!move_uploaded_file($file2['tmp_name'], $targetPath2)) {
+            jsonResponse(['error' => 'Failed to save Receipt 2. Please check server folder permissions.'], 500);
+        }
     }
 
     $db = getDatabase();
+
+    // Auto-migrate schema in case columns are missing
+    try { $db->exec("ALTER TABLE teams ADD COLUMN payment_pic2 VARCHAR(255) NULL"); } catch (Exception $e) {}
+    try { $db->exec("ALTER TABLE teams ADD COLUMN payment_ref2 VARCHAR(100) NULL"); } catch (Exception $e) {}
 
     // Check duplicate team name
     $checkStmt = $db->prepare("SELECT id FROM teams WHERE LOWER(team_name) = LOWER(:teamName) LIMIT 1");
     $checkStmt->execute([':teamName' => $teamName]);
     if ($checkStmt->fetch()) {
-        if (file_exists($targetPath)) {
-            @unlink($targetPath);
-        }
+        if (file_exists($targetPath1)) @unlink($targetPath1);
+        if ($fileName2 !== $fileName1 && file_exists($uploadDir . $fileName2)) @unlink($uploadDir . $fileName2);
         jsonResponse(['error' => 'A team with this name already exists! Please choose another name.'], 400);
     }
 
@@ -85,12 +103,12 @@ try {
             team_name, password, college, track,
             leader_name, leader_email, leader_phone, leader_dept,
             member2_name, member2_email, member2_phone, member2_dept,
-            payment_pic, payment_ref, status
+            payment_pic, payment_ref, payment_pic2, payment_ref2, status
         ) VALUES (
             :team_name, :password, :college, :track,
             :leader_name, :leader_email, :leader_phone, :leader_dept,
             :member2_name, :member2_email, :member2_phone, :member2_dept,
-            :payment_pic, :payment_ref, 'pending'
+            :payment_pic, :payment_ref, :payment_pic2, :payment_ref2, 'pending'
         )
     ");
 
@@ -107,8 +125,10 @@ try {
         ':member2_email' => $member2Email,
         ':member2_phone' => $member2Phone,
         ':member2_dept'  => $member2Dept,
-        ':payment_pic'   => $fileName,
-        ':payment_ref'   => $paymentRef
+        ':payment_pic'   => $fileName1,
+        ':payment_ref'   => $paymentRef,
+        ':payment_pic2'  => $fileName2,
+        ':payment_ref2'  => $paymentRef2
     ]);
 
     $insertedId = (int)$db->lastInsertId();

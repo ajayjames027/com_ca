@@ -23,14 +23,18 @@ if ($teamId <= 0) {
 
 try {
     $db = getDatabase();
-    $stmt = $db->prepare("SELECT payment_pic FROM teams WHERE id = :id LIMIT 1");
+    $stmt = $db->prepare("SELECT payment_pic, payment_pic2 FROM teams WHERE id = :id LIMIT 1");
     $stmt->execute([':id' => $teamId]);
     $team = $stmt->fetch();
 
-    if ($team && !empty($team['payment_pic'])) {
-        $filePath = __DIR__ . '/../uploads/' . basename($team['payment_pic']);
-        if (file_exists($filePath)) {
-            @unlink($filePath);
+    if ($team) {
+        if (!empty($team['payment_pic'])) {
+            $filePath = __DIR__ . '/../uploads/' . basename($team['payment_pic']);
+            if (file_exists($filePath)) @unlink($filePath);
+        }
+        if (!empty($team['payment_pic2']) && $team['payment_pic2'] !== $team['payment_pic']) {
+            $filePath2 = __DIR__ . '/../uploads/' . basename($team['payment_pic2']);
+            if (file_exists($filePath2)) @unlink($filePath2);
         }
     }
 

@@ -38,7 +38,8 @@ try {
         'Member 2 Email',
         'Member 2 Phone',
         'Member 2 Dept',
-        'Payment Ref',
+        'M1 Payment Ref (Rs 300)',
+        'M2 Payment Ref (Rs 300)',
         'Created At'
     ]);
 
@@ -60,6 +61,7 @@ try {
             $r['member2_phone'] ?? '',
             $r['member2_dept'] ?? '',
             $r['payment_ref'] ?? '',
+            $r['payment_ref2'] ?? '',
             $r['created_at'] ?? ''
         ]);
     }

@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS teams (
     member2_dept VARCHAR(100),
     payment_pic VARCHAR(255) NOT NULL,
     payment_ref VARCHAR(100),
+    payment_pic2 VARCHAR(255),
+    payment_ref2 VARCHAR(100),
     status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
     admin_notes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

@@ -212,13 +212,30 @@
                             <a href="tel:${t.member2_phone}" style="color: var(--secondary); text-decoration: none;">📞 ${t.member2_phone || 'N/A'}</a><br>
                             <span style="font-size: 0.74rem; color: var(--text-muted);">${escapeHtml(t.member2_email)}</span>
                         </td>
-                        <td>
-                            ${t.payment_pic ? `
-                                <button class="btn btn-outline btn-sm" onclick="viewImage('uploads/${t.payment_pic}', '${escapeHtml(t.team_name)}')">
-                                    📷 View Receipt
-                                </button>
-                                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Ref: ${escapeHtml(t.payment_ref || 'None')}</div>
-                            ` : '<span style="color: var(--danger);">No Receipt</span>'}
+                        <td style="min-width: 140px;">
+                            <!-- Participant 1 Payment -->
+                            <div style="margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px dashed var(--border-subtle);">
+                                <span style="font-size: 0.72rem; font-weight: 700; color: var(--primary); display: block;">M1 (Leader) - ₹300</span>
+                                ${t.payment_pic ? `
+                                    <button class="btn btn-outline btn-sm" style="padding: 2px 8px; font-size: 0.72rem; margin-top: 2px;" onclick="viewImage('uploads/${t.payment_pic}', '${escapeHtml(t.team_name)} (Member 1)')">
+                                        📷 Receipt 1
+                                    </button>
+                                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; word-break: break-all;">UTR: <strong>${escapeHtml(t.payment_ref || 'N/A')}</strong></div>
+                                ` : '<span style="color: var(--danger); font-size: 0.72rem;">No Receipt 1</span>'}
+                            </div>
+
+                            <!-- Participant 2 Payment -->
+                            <div>
+                                <span style="font-size: 0.72rem; font-weight: 700; color: #4f46e5; display: block;">M2 - ₹300</span>
+                                ${t.payment_pic2 ? `
+                                    <button class="btn btn-outline btn-sm" style="padding: 2px 8px; font-size: 0.72rem; margin-top: 2px;" onclick="viewImage('uploads/${t.payment_pic2}', '${escapeHtml(t.team_name)} (Member 2)')">
+                                        📷 Receipt 2
+                                    </button>
+                                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; word-break: break-all;">UTR: <strong>${escapeHtml(t.payment_ref2 || t.payment_ref || 'N/A')}</strong></div>
+                                ` : (t.payment_pic ? `
+                                    <span style="font-size: 0.7rem; color: var(--text-muted);">Same as M1 (₹600)</span>
+                                ` : '<span style="color: var(--danger); font-size: 0.72rem;">No Receipt 2</span>')}
+                            </div>
                         </td>
                         <td>
                             <span class="status-chip ${t.status}" style="font-size: 0.72rem; padding: 4px 10px;">

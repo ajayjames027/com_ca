@@ -166,6 +166,8 @@ db.serialize(() => {
         "member2_dept TEXT",
         "track TEXT",
         "payment_ref TEXT",
+        "payment_pic2 TEXT",
+        "payment_ref2 TEXT",
         "admin_notes TEXT",
         "created_at DATETIME DEFAULT CURRENT_TIMESTAMP"
     ];
@@ -190,8 +192,13 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 }
 });
 
+const uploadFields = upload.fields([
+    { name: 'payment_pic', maxCount: 1 },
+    { name: 'payment_pic2', maxCount: 1 }
+]);
+
 // Register Team (Strictly 2 members)
-app.post('/api/register', upload.single('payment_pic'), (req, res) => {
+app.post('/api/register', uploadFields, (req, res) => {
     try {
         const {
             teamName,
@@ -206,17 +213,20 @@ app.post('/api/register', upload.single('payment_pic'), (req, res) => {
             member2Email,
             member2Phone,
             member2Dept,
-            paymentRef
+            paymentRef,
+            paymentRef2
         } = req.body;
 
-        const paymentPic = req.file ? req.file.filename : null;
+        const files = req.files || {};
+        const paymentPic = (files['payment_pic'] && files['payment_pic'][0]) ? files['payment_pic'][0].filename : null;
+        const paymentPic2 = (files['payment_pic2'] && files['payment_pic2'][0]) ? files['payment_pic2'][0].filename : paymentPic;
 
         if (!teamName || !password || !college || !leaderName || !leaderEmail || !member2Name || !member2Email) {
             return res.status(400).json({ error: 'Please provide all required fields for both team members.' });
         }
 
         if (!paymentPic) {
-            return res.status(400).json({ error: 'Payment receipt screenshot is required.' });
+            return res.status(400).json({ error: 'Payment receipt screenshot is required for Participant 1.' });
         }
 
         const stmt = db.prepare(`
@@ -224,8 +234,8 @@ app.post('/api/register', upload.single('payment_pic'), (req, res) => {
                 team_name, password, college, track,
                 leader_name, leader_email, leader_phone, leader_dept,
                 member2_name, member2_email, member2_phone, member2_dept,
-                payment_pic, payment_ref, status
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+                payment_pic, payment_ref, payment_pic2, payment_ref2, status
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')
         `);
 
         stmt.run(
@@ -243,7 +253,9 @@ app.post('/api/register', upload.single('payment_pic'), (req, res) => {
                 member2Phone ? member2Phone.trim() : '',
                 member2Dept ? member2Dept.trim() : 'Commerce Computer Applications',
                 paymentPic,
-                paymentRef ? paymentRef.trim() : ''
+                paymentRef ? paymentRef.trim() : '',
+                paymentPic2,
+                paymentRef2 ? paymentRef2.trim() : (paymentRef ? paymentRef.trim() : '')
             ],
             function (err) {
                 if (err) {
@@ -372,11 +384,19 @@ app.post('/api/admin/reject/:id', (req, res) => {
 
 // Admin: Delete Team
 app.delete('/api/admin/team/:id', (req, res) => {
-    db.get(`SELECT payment_pic FROM teams WHERE id = ?`, [req.params.id], (err, row) => {
-        if (row && row.payment_pic) {
-            const filePath = path.join(uploadDir, row.payment_pic);
-            if (fs.existsSync(filePath)) {
-                try { fs.unlinkSync(filePath); } catch (e) {}
+    db.get(`SELECT payment_pic, payment_pic2 FROM teams WHERE id = ?`, [req.params.id], (err, row) => {
+        if (row) {
+            if (row.payment_pic) {
+                const filePath = path.join(uploadDir, row.payment_pic);
+                if (fs.existsSync(filePath)) {
+                    try { fs.unlinkSync(filePath); } catch (e) {}
+                }
+            }
+            if (row.payment_pic2 && row.payment_pic2 !== row.payment_pic) {
+                const filePath2 = path.join(uploadDir, row.payment_pic2);
+                if (fs.existsSync(filePath2)) {
+                    try { fs.unlinkSync(filePath2); } catch (e) {}
+                }
             }
         }
         db.run(`DELETE FROM teams WHERE id = ?`, [req.params.id], function (err) {
@@ -391,7 +411,7 @@ app.get('/api/admin/export-csv', (req, res) => {
     db.all(`SELECT * FROM teams ORDER BY id ASC`, (err, rows) => {
         if (err) return res.status(500).send('Error generating CSV');
         
-        let csv = 'ID,Pass No,Team Name,Status,College,Track,Leader Name,Leader Email,Leader Phone,Leader Dept,Member 2 Name,Member 2 Email,Member 2 Phone,Member 2 Dept,Payment Ref,Created At\n';
+        let csv = 'ID,Pass No,Team Name,Status,College,Track,Leader Name,Leader Email,Leader Phone,Leader Dept,Member 2 Name,Member 2 Email,Member 2 Phone,Member 2 Dept,M1 Payment Ref (Rs 300),M2 Payment Ref (Rs 300),Created At\n';
         
         rows.forEach(r => {
             const pass = r.pass_id || `HF26-${1000 + r.id}`;
@@ -412,6 +432,7 @@ app.get('/api/admin/export-csv', (req, res) => {
                 clean(r.member2_phone),
                 clean(r.member2_dept),
                 clean(r.payment_ref),
+                clean(r.payment_ref2 || r.payment_ref),
                 clean(r.created_at)
             ].join(',') + '\n';
         });

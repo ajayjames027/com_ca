@@ -161,7 +161,7 @@
                 <div class="payment-box">
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; flex-wrap: wrap; gap: 8px;">
                         <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.05rem; color: var(--text-main); margin: 0;">
-                            💳 Registration Payment Verification
+                            💳 Registration Payment Verification (₹300 per participant / ₹600 per team)
                         </h4>
                         <span class="badge-tag">Official College Gateway</span>
                     </div>
@@ -172,36 +172,67 @@
                             Step 1: Pay via Official St. Joseph's College Portal
                         </div>
                         <p style="font-size: 0.88rem; color: var(--text-body); margin-bottom: 0.8rem;">
-                            Click the button below to complete your registration payment on the college seminar payment gateway (Program Code: <strong>CC21124631</strong>):
+                            Registration fee is <strong>₹300 per participant</strong> (Total <strong>₹600</strong> for the team of 2). Click the button below to complete your payment on the college seminar payment gateway under Program Code <strong>CC21124631</strong>:
                         </p>
                         <a href="https://service.sjctni.edu/Seminar/25/index.php?programcode=CC21124631" target="_blank" class="btn btn-primary" style="width: 100%; font-size: 0.95rem; font-weight: 700; padding: 0.85rem; text-decoration: none;">
                             🔗 Open College Payment Portal (Program Code: CC21124631) ↗
                         </a>
                         <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 6px; text-align: center;">
-                            (Opens in a new tab. After completing payment, return here to submit proof)
+                            (Opens in a new tab. After paying ₹300 per participant, return here to submit proof)
                         </p>
                     </div>
 
-                    <!-- Step 2: Upload Proof -->
-                    <div style="background: #ffffff; border: 1px solid var(--border-subtle); border-radius: 10px; padding: 1.2rem;">
-                        <div style="font-size: 0.85rem; font-weight: 700; color: #15803d; text-transform: uppercase; margin-bottom: 4px;">
-                            Step 2: Enter Transaction Details &amp; Upload Receipt
+                    <!-- Step 2: Participant 1 Proof -->
+                    <div style="background: #ffffff; border: 1px solid var(--border-subtle); border-radius: 10px; padding: 1.2rem; margin-bottom: 1.2rem;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 6px;">
+                            <div style="font-size: 0.85rem; font-weight: 700; color: #15803d; text-transform: uppercase;">
+                                👤 Participant 1 (Team Leader) Payment Proof — ₹300
+                            </div>
+                            <span class="badge-tag" style="background: #dcfce7; color: #15803d; border-color: #bbf7d0;">Member 1 Fee</span>
                         </div>
-                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
-                            Enter the Transaction Reference / UTR ID from your college receipt and upload the screenshot:
+                        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem;">
+                            Enter the UTR / Transaction Reference ID and upload payment receipt screenshot for Participant 1:
                         </p>
 
                         <div class="form-grid-2">
                             <div class="form-group" style="margin-bottom: 0;">
-                                <label for="paymentRef">UTR / Transaction Reference ID <span class="req">*</span></label>
+                                <label for="paymentRef">Participant 1 UTR / Ref ID <span class="req">*</span></label>
                                 <input type="text" id="paymentRef" name="paymentRef" class="form-control" placeholder="e.g. DU12345678 or UTR Number" required>
                             </div>
 
                             <div class="form-group" style="margin-bottom: 0;">
-                                <label for="payment_pic">Upload Payment Receipt Screenshot <span class="req">*</span></label>
-                                <input type="file" id="payment_pic" name="payment_pic" class="form-control" accept="image/*" required style="padding: 0.5rem;">
+                                <label for="payment_pic">Participant 1 Receipt Screenshot <span class="req">*</span></label>
+                                <input type="file" id="payment_pic" name="payment_pic" class="form-control" accept="image/*,.pdf" required style="padding: 0.5rem;">
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Step 3: Participant 2 Proof -->
+                    <div style="background: #ffffff; border: 1px solid var(--border-subtle); border-radius: 10px; padding: 1.2rem;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 6px;">
+                            <div style="font-size: 0.85rem; font-weight: 700; color: #4f46e5; text-transform: uppercase;">
+                                👤 Participant 2 Payment Proof — ₹300
+                            </div>
+                            <span class="badge-tag" style="background: #ede9fe; color: #4f46e5; border-color: #ddd6fe;">Member 2 Fee</span>
+                        </div>
+                        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem;">
+                            Enter the UTR / Transaction Reference ID and upload payment receipt screenshot for Participant 2:
+                        </p>
+
+                        <div class="form-grid-2">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="paymentRef2">Participant 2 UTR / Ref ID <span class="req">*</span></label>
+                                <input type="text" id="paymentRef2" name="paymentRef2" class="form-control" placeholder="e.g. DU87654321 or UTR Number" required>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="payment_pic2">Participant 2 Receipt Screenshot <span class="req">*</span></label>
+                                <input type="file" id="payment_pic2" name="payment_pic2" class="form-control" accept="image/*,.pdf" required style="padding: 0.5rem;">
+                            </div>
+                        </div>
+                        <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 10px; margin-bottom: 0; line-height: 1.4;">
+                            💡 <em>Note: If ₹600 was paid together in a single transaction for both participants, enter the same UTR and re-upload the same receipt screenshot for Participant 2.</em>
+                        </p>
                     </div>
                 </div>
 
