@@ -66,9 +66,9 @@ Open `config.php` in your text editor (or edit directly in cPanel File Manager) 
 // config.php
 define('DB_HOST', 'localhost');
 define('DB_PORT', '3306');
-define('DB_NAME', 'frontie_hackfest');      // Replace with your full cPanel DB name
-define('DB_USER', 'frontie_hackfest_user'); // Replace with your cPanel DB user
-define('DB_PASS', 'YourStrongPasswordHere');// Replace with your DB user password
+define('DB_NAME', 'freewmbl_frontie_hackfest');
+define('DB_USER', 'freewmbl_frontie_hackfest'); // If your DB username is different in cPanel, update this
+define('DB_PASS', 'Freewill@25');
 
 // Admin Credentials
 define('ADMIN_USER', 'admin');

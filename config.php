@@ -24,9 +24,9 @@ define('HACKFEST_CONFIG_LOADED', true);
 // -------------------------------------------------------------
 define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
 define('DB_PORT', getenv('DB_PORT') ?: '3306');
-define('DB_NAME', getenv('DB_NAME') ?: 'hackfest26');
-define('DB_USER', getenv('DB_USER') ?: 'root');
-define('DB_PASS', getenv('DB_PASS') ?: '');
+define('DB_NAME', getenv('DB_NAME') ?: 'freewmbl_frontie_hackfest');
+define('DB_USER', getenv('DB_USER') ?: 'freewmbl_frontie_hackfest');
+define('DB_PASS', getenv('DB_PASS') ?: 'Freewill@25');
 
 // -------------------------------------------------------------
 // 2. ADMIN CREDENTIALS
