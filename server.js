@@ -4,9 +4,115 @@ const multer = require('multer');
 const path = require('path');
 const cors = require('cors');
 const fs = require('fs');
+const nodemailer = require('nodemailer');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Email Transporter Configuration (ajayjames027@gmail.com)
+const EMAIL_USER = process.env.EMAIL_USER || 'ajayjames027@gmail.com';
+const EMAIL_PASS = process.env.EMAIL_PASS || ''; // Set via environment or .env
+
+let transporter = null;
+if (EMAIL_PASS) {
+    transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: EMAIL_USER,
+            pass: EMAIL_PASS
+        }
+    });
+} else {
+    // Development fallback (logs to console without failing)
+    console.log('NOTE: EMAIL_PASS not set. Emails will be logged to console. To enable live sending from ajayjames027@gmail.com, set EMAIL_PASS with your Gmail App Password.');
+}
+
+async function sendVerificationEmail(team) {
+    const recipients = [team.leader_email, team.member2_email].filter(Boolean).join(', ');
+    const passId = team.pass_id || `HF26-${1000 + team.id}`;
+    const whatsappLink = 'https://chat.whatsapp.com/CGQ2aJinJQNIbKR39taZc0';
+    const portalUrl = process.env.APP_URL || 'http://localhost:3000/login.html';
+
+    const mailOptions = {
+        from: `"HACKFEST '26 - St. Joseph's College" <${EMAIL_USER}>`,
+        to: recipients,
+        subject: `🎉 Verification Approved: Team "${team.team_name}" - HACKFEST '26 Gate Pass Issued`,
+        html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; color: #1e293b;">
+            <div style="background: #0f172a; padding: 24px; text-align: center; color: #ffffff;">
+                <h2 style="margin: 0; font-size: 20px; letter-spacing: 1px;">ST. JOSEPH'S COLLEGE (AUTONOMOUS)</h2>
+                <p style="margin: 4px 0 0; font-size: 13px; color: #fbbf24;">DEPARTMENT OF COMMERCE COMPUTER APPLICATIONS</p>
+                <h1 style="margin: 14px 0 0; font-size: 26px; color: #38bdf8;">HACKFEST '26</h1>
+                <p style="margin: 4px 0 0; font-size: 13px; color: #cbd5e1;">Official Verification &amp; Campus Gate Pass</p>
+            </div>
+
+            <div style="padding: 24px;">
+                <p style="font-size: 16px; font-weight: bold; color: #15803d; margin-top: 0;">
+                    ✓ Registration &amp; Payment Successfully Verified!
+                </p>
+                <p style="font-size: 15px; line-height: 1.6;">
+                    Dear <strong>${team.leader_name}</strong> and <strong>${team.member2_name}</strong>,
+                </p>
+                <p style="font-size: 14px; line-height: 1.6; color: #334155;">
+                    Congratulations! Your team <strong>"${team.team_name}"</strong> from <strong>${team.college}</strong> has been officially approved for <strong>HACKFEST '26</strong> by the Department of Commerce Computer Applications, St. Joseph's College (Autonomous), Tiruchirappalli.
+                </p>
+
+                <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 16px; margin: 20px 0;">
+                    <div style="font-size: 12px; text-transform: uppercase; color: #64748b; font-weight: bold;">Official Gate Pass ID</div>
+                    <div style="font-size: 22px; font-weight: bold; color: #1d4ed8; margin: 4px 0;">${passId}</div>
+                    <div style="font-size: 13px; color: #475569;"><strong>Assigned Track:</strong> ${team.track || 'General Application Development'}</div>
+                </div>
+
+                <div style="margin: 24px 0; text-align: center;">
+                    <a href="${whatsappLink}" target="_blank" style="display: inline-block; background: #25d366; color: #ffffff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px; margin-right: 10px;">
+                        💬 Join Official WhatsApp Group →
+                    </a>
+                </div>
+
+                <div style="margin: 15px 0; text-align: center;">
+                    <a href="${portalUrl}" target="_blank" style="display: inline-block; background: #1d4ed8; color: #ffffff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">
+                        🖨️ Download / Print Campus Gate Pass
+                    </a>
+                </div>
+
+                <div style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 8px; padding: 14px; margin: 20px 0; font-size: 13px; color: #92400e;">
+                    <strong>⚠️ Important Entry Requirement:</strong><br>
+                    Both team members must present their printed Gate Pass along with their original College ID Card at the college security gate for campus entry.
+                </div>
+
+                <div style="border-top: 1px solid #e2e8f0; padding-top: 16px; margin-top: 24px; font-size: 13px; color: #64748b;">
+                    <strong>Need Help? Contact Coordinators:</strong><br>
+                    • Staff Coordinator: Dr. B. Fatimamary (96294 82064)<br>
+                    • Student Coordinator: Mohamed Ismail K S (63818 98996)<br>
+                    • Student Coordinator: K Abinesh (96269 83425)
+                </div>
+            </div>
+
+            <div style="background: #f1f5f9; padding: 14px; text-align: center; font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0;">
+                St. Joseph's College (Autonomous), Tiruchirappalli - 620 002<br>
+                Organized by the Department of Commerce Computer Applications • Developed by FrontierWox Tech Pvt Ltd
+            </div>
+        </div>
+        `
+    };
+
+    if (transporter) {
+        try {
+            const info = await transporter.sendMail(mailOptions);
+            console.log(`Live verification email sent from ${EMAIL_USER} to ${recipients}: ${info.messageId}`);
+            return { sent: true, messageId: info.messageId };
+        } catch (err) {
+            console.error('Failed to send live email:', err.message);
+            return { sent: false, error: err.message };
+        }
+    } else {
+        console.log(`[SIMULATED EMAIL NOTIFICATION from ${EMAIL_USER}] to [${recipients}]`);
+        console.log(`Subject: ${mailOptions.subject}`);
+        console.log(`Team: ${team.team_name} | Pass ID: ${passId}`);
+        console.log(`WhatsApp Link: ${whatsappLink}`);
+        return { sent: false, note: 'EMAIL_PASS not configured in environment' };
+    }
+}
 
 // Ensure upload directory exists
 const uploadDir = path.join(__dirname, 'uploads');
@@ -50,7 +156,6 @@ db.serialize(() => {
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
 
-    // Safely add any new columns to existing database
     const columns = [
         "pass_id TEXT",
         "leader_phone TEXT",
@@ -68,7 +173,7 @@ db.serialize(() => {
     });
 });
 
-// Configure Multer Storage for Payment Proofs
+// Multer Storage Configuration
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, uploadDir);
@@ -80,7 +185,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+    limits: { fileSize: 10 * 1024 * 1024 }
 });
 
 // Register Team (Strictly 2 members)
@@ -109,7 +214,7 @@ app.post('/api/register', upload.single('payment_pic'), (req, res) => {
         }
 
         if (!paymentPic) {
-            return res.status(400).json({ error: 'Payment screenshot proof is mandatory.' });
+            return res.status(400).json({ error: 'Payment receipt screenshot is required.' });
         }
 
         const stmt = db.prepare(`
@@ -130,18 +235,18 @@ app.post('/api/register', upload.single('payment_pic'), (req, res) => {
                 leaderName.trim(),
                 leaderEmail.trim().toLowerCase(),
                 leaderPhone ? leaderPhone.trim() : '',
-                leaderDept ? leaderDept.trim() : 'Computer Science',
+                leaderDept ? leaderDept.trim() : 'Commerce Computer Applications',
                 member2Name.trim(),
                 member2Email.trim().toLowerCase(),
                 member2Phone ? member2Phone.trim() : '',
-                member2Dept ? member2Dept.trim() : 'Commerce CA',
+                member2Dept ? member2Dept.trim() : 'Commerce Computer Applications',
                 paymentPic,
                 paymentRef ? paymentRef.trim() : ''
             ],
             function (err) {
                 if (err) {
                     if (err.message.includes('UNIQUE constraint failed')) {
-                        return res.status(400).json({ error: 'A team with this name already exists! Please choose another team name.' });
+                        return res.status(400).json({ error: 'A team with this name already exists! Please choose another name.' });
                     }
                     return res.status(400).json({ error: err.message });
                 }
@@ -166,7 +271,7 @@ app.post('/api/register', upload.single('payment_pic'), (req, res) => {
     }
 });
 
-// Authentication (Admin and Team)
+// Authentication
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) {
@@ -187,7 +292,6 @@ app.post('/api/login', (req, res) => {
             if (err) return res.status(500).json({ error: 'Database error' });
             if (!row) return res.status(401).json({ error: 'Invalid team name or password.' });
             
-            // Generate pass_id if not present
             if (!row.pass_id) {
                 row.pass_id = `HF26-${1000 + row.id}`;
             }
@@ -197,7 +301,7 @@ app.post('/api/login', (req, res) => {
     );
 });
 
-// Get Latest Status for a Team
+// Latest Status for a Team
 app.get('/api/team/status/:teamName', (req, res) => {
     db.get(
         `SELECT * FROM teams WHERE LOWER(team_name) = LOWER(?)`,
@@ -221,17 +325,34 @@ app.get('/api/admin/teams', (req, res) => {
     });
 });
 
-// Admin: Approve Team
+// Admin: Approve Team & Trigger Automated Email
 app.post('/api/admin/approve/:id', (req, res) => {
-    const passId = `HF26-${1000 + parseInt(req.params.id, 10)}`;
-    db.run(
-        `UPDATE teams SET status = 'approved', pass_id = COALESCE(pass_id, ?) WHERE id = ?`,
-        [passId, req.params.id],
-        function (err) {
-            if (err) return res.status(500).json({ error: err.message });
-            res.json({ success: true, message: 'Team approved successfully.' });
-        }
-    );
+    const teamId = req.params.id;
+    const passId = `HF26-${1000 + parseInt(teamId, 10)}`;
+
+    db.get(`SELECT * FROM teams WHERE id = ?`, [teamId], (err, team) => {
+        if (err || !team) return res.status(404).json({ error: 'Team not found' });
+
+        db.run(
+            `UPDATE teams SET status = 'approved', pass_id = COALESCE(pass_id, ?) WHERE id = ?`,
+            [passId, teamId],
+            async function (err2) {
+                if (err2) return res.status(500).json({ error: err2.message });
+
+                team.status = 'approved';
+                team.pass_id = passId;
+
+                // Send automated email notification to both members from ajayjames027@gmail.com
+                const emailResult = await sendVerificationEmail(team);
+
+                res.json({
+                    success: true,
+                    message: 'Team approved successfully and Gate Pass issued.',
+                    email: emailResult
+                });
+            }
+        );
+    });
 });
 
 // Admin: Reject Team
@@ -239,7 +360,7 @@ app.post('/api/admin/reject/:id', (req, res) => {
     const { note } = req.body || {};
     db.run(
         `UPDATE teams SET status = 'rejected', admin_notes = ? WHERE id = ?`,
-        [note || 'Payment details could not be verified.', req.params.id],
+        [note || 'Payment details could not be verified on the college portal.', req.params.id],
         function (err) {
             if (err) return res.status(500).json({ error: err.message });
             res.json({ success: true, message: 'Team marked as rejected.' });

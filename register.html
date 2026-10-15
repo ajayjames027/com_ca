@@ -159,22 +159,48 @@
 
                 <!-- Payment Receipt Section -->
                 <div class="payment-box">
-                    <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; color: var(--text-main); margin-bottom: 0.4rem;">
-                        💳 Registration Fee &amp; Payment Screenshot
-                    </h4>
-                    <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.45; margin-bottom: 1rem;">
-                        Please complete the registration fee payment as communicated by the Department of Commerce Computer Applications. Upload your transaction screenshot proof below for verification.
-                    </p>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; flex-wrap: wrap; gap: 8px;">
+                        <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.05rem; color: var(--text-main); margin: 0;">
+                            💳 Registration Payment Verification
+                        </h4>
+                        <span class="badge-tag">Official College Gateway</span>
+                    </div>
 
-                    <div class="form-grid-2">
-                        <div class="form-group">
-                            <label for="paymentRef">UTR / Transaction Reference ID</label>
-                            <input type="text" id="paymentRef" name="paymentRef" class="form-control" placeholder="UPI Reference / UTR Number">
+                    <!-- Step 1: Pay via College Portal -->
+                    <div style="background: #ffffff; border: 1px solid var(--border-strong); border-radius: 10px; padding: 1.2rem; margin-bottom: 1.2rem;">
+                        <div style="font-size: 0.85rem; font-weight: 700; color: var(--primary); text-transform: uppercase; margin-bottom: 4px;">
+                            Step 1: Pay via Official St. Joseph's College Portal
                         </div>
+                        <p style="font-size: 0.88rem; color: var(--text-body); margin-bottom: 0.8rem;">
+                            Click the button below to complete your registration payment on the college seminar payment gateway (Program Code: <strong>CC21124631</strong>):
+                        </p>
+                        <a href="https://service.sjctni.edu/Seminar/25/index.php?programcode=CC21124631" target="_blank" class="btn btn-primary" style="width: 100%; font-size: 0.95rem; font-weight: 700; padding: 0.85rem; text-decoration: none;">
+                            🔗 Open College Payment Portal (Program Code: CC21124631) ↗
+                        </a>
+                        <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 6px; text-align: center;">
+                            (Opens in a new tab. After completing payment, return here to submit proof)
+                        </p>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="payment_pic">Upload Payment Receipt <span class="req">*</span></label>
-                            <input type="file" id="payment_pic" name="payment_pic" class="form-control" accept="image/*" required style="padding: 0.5rem;">
+                    <!-- Step 2: Upload Proof -->
+                    <div style="background: #ffffff; border: 1px solid var(--border-subtle); border-radius: 10px; padding: 1.2rem;">
+                        <div style="font-size: 0.85rem; font-weight: 700; color: #15803d; text-transform: uppercase; margin-bottom: 4px;">
+                            Step 2: Enter Transaction Details &amp; Upload Receipt
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                            Enter the Transaction Reference / UTR ID from your college receipt and upload the screenshot:
+                        </p>
+
+                        <div class="form-grid-2">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="paymentRef">UTR / Transaction Reference ID <span class="req">*</span></label>
+                                <input type="text" id="paymentRef" name="paymentRef" class="form-control" placeholder="e.g. DU12345678 or UTR Number" required>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="payment_pic">Upload Payment Receipt Screenshot <span class="req">*</span></label>
+                                <input type="file" id="payment_pic" name="payment_pic" class="form-control" accept="image/*" required style="padding: 0.5rem;">
+                            </div>
                         </div>
                     </div>
                 </div>
