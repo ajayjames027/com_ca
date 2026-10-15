@@ -34,7 +34,7 @@
 
         <div class="nav-links">
             <a href="index.html" target="_blank">View Site ↗</a>
-            <a href="/api/admin/export-csv" class="btn btn-outline" style="padding: 0.45rem 1.2rem; font-size: 0.82rem;">📥 Export CSV</a>
+            <a href="api/admin/export-csv" class="btn btn-outline" style="padding: 0.45rem 1.2rem; font-size: 0.82rem;">📥 Export CSV</a>
             <a href="#" onclick="logout()" class="btn btn-secondary" style="padding: 0.45rem 1.2rem; font-size: 0.82rem;">Sign Out</a>
         </div>
     </nav>
@@ -79,7 +79,7 @@
                     <option value="rejected">Rejected</option>
                 </select>
                 <button class="btn btn-outline" onclick="fetchTeams()">🔄 Refresh</button>
-                <a href="/api/admin/export-csv" class="btn btn-primary" download>📥 Export to CSV</a>
+                <a href="api/admin/export-csv" class="btn btn-primary" download>📥 Export to CSV</a>
             </div>
         </div>
 
@@ -139,7 +139,7 @@
 
         async function fetchTeams() {
             try {
-                const res = await fetch('/api/admin/teams');
+                const res = await fetch('api/admin/teams');
                 if (!res.ok) throw new Error('Failed to load registrations');
                 allTeams = await res.json();
                 updateStats();
@@ -214,7 +214,7 @@
                         </td>
                         <td>
                             ${t.payment_pic ? `
-                                <button class="btn btn-outline btn-sm" onclick="viewImage('/uploads/${t.payment_pic}', '${escapeHtml(t.team_name)}')">
+                                <button class="btn btn-outline btn-sm" onclick="viewImage('uploads/${t.payment_pic}', '${escapeHtml(t.team_name)}')">
                                     📷 View Receipt
                                 </button>
                                 <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Ref: ${escapeHtml(t.payment_ref || 'None')}</div>
@@ -243,7 +243,7 @@
 
         async function approveTeam(id) {
             try {
-                const res = await fetch(`/api/admin/approve/${id}`, { method: 'POST' });
+                const res = await fetch(`api/admin/approve/${id}`, { method: 'POST' });
                 if (res.ok) {
                     fetchTeams();
                 } else {
@@ -259,7 +259,7 @@
             if (reason === null) return;
 
             try {
-                const res = await fetch(`/api/admin/reject/${id}`, {
+                const res = await fetch(`api/admin/reject/${id}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ note: reason })
@@ -278,7 +278,7 @@
             if (!confirm(`Are you sure you want to permanently delete team "${teamName}"?`)) return;
 
             try {
-                const res = await fetch(`/api/admin/team/${id}`, { method: 'DELETE' });
+                const res = await fetch(`api/admin/team/${id}`, { method: 'DELETE' });
                 if (res.ok) {
                     fetchTeams();
                 } else {

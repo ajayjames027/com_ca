@@ -247,7 +247,7 @@
 
         async function refreshTeamData() {
             try {
-                const res = await fetch(`/api/team/status/${encodeURIComponent(user.team.team_name)}`);
+                const res = await fetch(`api/team/status/${encodeURIComponent(user.team.team_name)}`);
                 if (res.ok) {
                     const data = await res.json();
                     user.team = data.team;

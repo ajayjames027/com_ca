@@ -245,7 +245,7 @@
 
             const formData = new FormData(e.target);
             try {
-                const res = await fetch('/api/register', {
+                const res = await fetch('api/register', {
                     method: 'POST',
                     body: formData
                 });
