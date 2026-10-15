@@ -116,7 +116,7 @@ If `frontierwox.in` is hosted on a cPanel server:
 ## 5. Organizing Body & Attribution
 
 - **Host Institution:** St. Joseph's College (Autonomous), Tiruchirappalli - 620 002, Tamil Nadu
-- **Organized Exclusively By:** Department of Commerce Computer Applications (B.Com CA)
+- **Organized Exclusively By:** Department of Commerce Computer Applications
 - **Technical Development:** Developed by FrontierWox Tech Private Limited (`frontierwox.in`)
 - **Staff Co-ordinator:** Dr. B. Fatimamary (📞 96294 82064)
 - **Student Co-ordinators:**
