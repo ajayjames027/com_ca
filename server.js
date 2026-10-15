@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const multer = require('multer');
@@ -11,7 +12,7 @@ const port = process.env.PORT || 3000;
 
 // Email Transporter Configuration (ajayjames027@gmail.com)
 const EMAIL_USER = process.env.EMAIL_USER || 'ajayjames027@gmail.com';
-const EMAIL_PASS = process.env.EMAIL_PASS || ''; // Set via environment or .env
+const EMAIL_PASS = (process.env.EMAIL_PASS || '').replace(/\s+/g, ''); // Normalizes Gmail App Password
 
 let transporter = null;
 if (EMAIL_PASS) {
@@ -22,6 +23,7 @@ if (EMAIL_PASS) {
             pass: EMAIL_PASS
         }
     });
+    console.log(`Live email notifications active via Gmail SMTP (${EMAIL_USER})`);
 } else {
     // Development fallback (logs to console without failing)
     console.log('NOTE: EMAIL_PASS not set. Emails will be logged to console. To enable live sending from ajayjames027@gmail.com, set EMAIL_PASS with your Gmail App Password.');
