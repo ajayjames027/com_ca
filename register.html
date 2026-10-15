@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Registration | HACKFEST '26 - St. Joseph's College (Autonomous)</title>
+    <meta name="description" content="Register your two-member team for HACKFEST '26 - State Level Intercollegiate Hackathon.">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="academic-bg"></div>
+
+    <div class="heritage-bar">
+        <span>🏛️ <strong>ST. JOSEPH'S COLLEGE (AUTONOMOUS)</strong> • Special Heritage Status Awarded by UGC • Accredited at A++ Grade by NAAC</span>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html" class="nav-brand">
+            <img src="college_logo.png" alt="St. Joseph's College Crest" class="logo-college">
+            <div class="brand-divider"></div>
+            <div class="brand-details">
+                <span class="brand-title">HACKFEST <span class="year">'26</span></span>
+                <span class="brand-college">St. Joseph's College (Autonomous)</span>
+                <span class="brand-dept">CS &amp; Commerce CA</span>
+            </div>
+        </a>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="index.html#rules">Rules</a>
+            <a href="index.html#coordinators">Coordinators</a>
+            <a href="login.html" class="btn btn-outline" style="padding: 0.45rem 1.2rem; font-size: 0.85rem;">Login</a>
+        </div>
+    </nav>
+
+    <div class="form-page-container">
+        <div class="form-academic-card">
+            <div class="form-header">
+                <div class="badge-academic">Team Formation Rule: Exactly 2 Members</div>
+                <h2>Team Registration</h2>
+                <p style="color: var(--text-muted); font-size: 0.92rem;">
+                    Eligible: Students from <strong>UG Computer Science</strong> &amp; <strong>Commerce Computer Applications (B.Com CA)</strong>
+                </p>
+            </div>
+
+            <form id="registrationForm" enctype="multipart/form-data">
+                <!-- Team Credentials & College -->
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label for="teamName">Unique Team Name <span class="req">*</span></label>
+                        <input type="text" id="teamName" name="teamName" class="form-control" placeholder="e.g. AlgoWarriors" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Create Portal Password <span class="req">*</span></label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="To view status and download ID card" required>
+                    </div>
+                </div>
+
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label for="college">College / Institution Name <span class="req">*</span></label>
+                        <input type="text" id="college" name="college" class="form-control" placeholder="Full College Name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="track">Preferred Innovation Track <span class="req">*</span></label>
+                        <select id="track" name="track" class="form-control" required>
+                            <option value="" disabled selected>Select Technical Track</option>
+                            <option value="Artificial Intelligence and Machine Learning">Artificial Intelligence &amp; Machine Learning</option>
+                            <option value="Web Application Development">Web Application Development</option>
+                            <option value="Mobile Application Development">Mobile Application Development</option>
+                            <option value="Cloud Computing">Cloud Computing &amp; DevOps</option>
+                            <option value="Cybersecurity and Data Privacy">Cybersecurity &amp; Data Privacy</option>
+                            <option value="Data Analytics and Visualization">Data Analytics &amp; Visualization</option>
+                            <option value="E-Commerce and FinTech Solutions">E-Commerce &amp; FinTech Solutions</option>
+                            <option value="Social Innovation and Smart Campus Solutions">Social Innovation &amp; Smart Campus Solutions</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Member 1 (Team Leader) -->
+                <div class="member-fieldset leader">
+                    <div class="member-fieldset-title">
+                        <span style="color: var(--primary);">👤 Member 1 (Team Leader)</span>
+                        <span class="badge-tag">Leader</span>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label for="leaderName">Full Name <span class="req">*</span></label>
+                            <input type="text" id="leaderName" name="leaderName" class="form-control" placeholder="Leader Full Name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="leaderDept">Department <span class="req">*</span></label>
+                            <select id="leaderDept" name="leaderDept" class="form-control" required>
+                                <option value="Computer Science (B.Sc CS)">Computer Science (B.Sc CS)</option>
+                                <option value="Computer Applications (BCA)">Computer Applications (BCA)</option>
+                                <option value="Commerce Computer Applications (B.Com CA)">Commerce Computer Applications (B.Com CA)</option>
+                                <option value="Information Technology">Information Technology</option>
+                                <option value="Other Eligible UG Department">Other Eligible UG Department</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label for="leaderPhone">WhatsApp / Mobile Number <span class="req">*</span></label>
+                            <input type="tel" id="leaderPhone" name="leaderPhone" class="form-control" placeholder="10-digit mobile number" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="leaderEmail">Email Address <span class="req">*</span></label>
+                            <input type="email" id="leaderEmail" name="leaderEmail" class="form-control" placeholder="leader@college.edu" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Member 2 -->
+                <div class="member-fieldset member2">
+                    <div class="member-fieldset-title">
+                        <span style="color: #a5b4fc;">👤 Member 2 (Teammate)</span>
+                        <span class="badge-tag" style="background: rgba(99, 102, 241, 0.15); color: #a5b4fc; border-color: rgba(99, 102, 241, 0.3);">Member 2</span>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label for="member2Name">Full Name <span class="req">*</span></label>
+                            <input type="text" id="member2Name" name="member2Name" class="form-control" placeholder="Member 2 Full Name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="member2Dept">Department <span class="req">*</span></label>
+                            <select id="member2Dept" name="member2Dept" class="form-control" required>
+                                <option value="Computer Science (B.Sc CS)">Computer Science (B.Sc CS)</option>
+                                <option value="Computer Applications (BCA)">Computer Applications (BCA)</option>
+                                <option value="Commerce Computer Applications (B.Com CA)">Commerce Computer Applications (B.Com CA)</option>
+                                <option value="Information Technology">Information Technology</option>
+                                <option value="Other Eligible UG Department">Other Eligible UG Department</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label for="member2Phone">WhatsApp / Mobile Number <span class="req">*</span></label>
+                            <input type="tel" id="member2Phone" name="member2Phone" class="form-control" placeholder="10-digit mobile number" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="member2Email">Email Address <span class="req">*</span></label>
+                            <input type="email" id="member2Email" name="member2Email" class="form-control" placeholder="member2@college.edu" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Receipt Section -->
+                <div class="payment-box">
+                    <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; color: #fff; margin-bottom: 0.4rem;">
+                        💳 Registration Fee &amp; Payment Screenshot
+                    </h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 1rem;">
+                        Please submit your registration fee via UPI / Bank transfer as communicated by the organizing committee. Attach the transaction receipt image below for verification.
+                    </p>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label for="paymentRef">UTR / Transaction Reference ID</label>
+                            <input type="text" id="paymentRef" name="paymentRef" class="form-control" placeholder="UPI Reference / UTR Number">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="payment_pic">Upload Payment Receipt <span class="req">*</span></label>
+                            <input type="file" id="payment_pic" name="payment_pic" class="form-control" accept="image/*" required style="padding: 0.5rem;">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary submit-btn" style="width: 100%; padding: 0.9rem; font-size: 1rem;">
+                    Submit Team Registration →
+                </button>
+
+                <p style="text-align: center; margin-top: 1.4rem; font-size: 0.88rem; color: var(--text-muted);">
+                    Already registered? <a href="login.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">Log in to your Team Dashboard</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-bottom" style="border: none; padding-top: 0;">
+            <p>&copy; 2026 Dept. of CS &amp; Commerce CA, St. Joseph's College (Autonomous), Tiruchirappalli.</p>
+            <p>Developed by <a href="https://frontierwox.in" target="_blank" style="color: var(--primary); text-decoration: none;">FrontierWox Tech Private Limited</a></p>
+        </div>
+    </footer>
+
+    <!-- Bottom Corner "Developed by" Badge -->
+    <a href="https://frontierwox.in" target="_blank" class="developed-by-badge" title="Developed by FrontierWox Tech Private Limited">
+        <div class="dev-label">
+            <span class="dev-text">Developed by</span>
+            <span class="dev-company">FrontierWox</span>
+        </div>
+        <div class="dev-logo-container">
+            <img src="fwt.jpg" alt="FrontierWox Logo" class="dev-logo">
+        </div>
+    </a>
+
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('.submit-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Verifying &amp; Submitting...';
+            btn.disabled = true;
+
+            const formData = new FormData(e.target);
+            try {
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Registration failed');
+
+                alert('Registration submitted successfully!\nYour Pass ID is: ' + data.passId + '\nPlease log in to track committee approval and download your ID card.');
+                localStorage.setItem('recent_team_name', document.getElementById('teamName').value.trim());
+                window.location.href = 'login.html';
+            } catch (err) {
+                alert('Error: ' + err.message);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

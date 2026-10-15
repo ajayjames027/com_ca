@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Review Console | HACKFEST '26 - St. Joseph's College</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { overflow-y: auto; }
+        .admin-wrapper { max-width: 1350px; margin: 40px auto 60px; padding: 0 4%; }
+        .table-container { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; overflow: hidden; }
+        .btn-sm { padding: 6px 12px; font-size: 0.78rem; border-radius: 6px; }
+        .action-cell { display: flex; gap: 6px; flex-wrap: wrap; }
+    </style>
+</head>
+<body>
+    <div class="academic-bg"></div>
+
+    <div class="heritage-bar">
+        <span>🏛️ <strong>ST. JOSEPH'S COLLEGE (AUTONOMOUS)</strong> • Special Heritage Status Awarded by UGC • NAAC A++</span>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html" class="nav-brand">
+            <img src="college_logo.png" alt="St. Joseph's College Crest" class="logo-college">
+            <div class="brand-divider"></div>
+            <div class="brand-details">
+                <span class="brand-title">HACKFEST <span class="year">'26</span></span>
+                <span class="brand-college">St. Joseph's College (Autonomous)</span>
+                <span class="brand-dept">Organizing Committee Console</span>
+            </div>
+        </a>
+
+        <div class="nav-links">
+            <a href="index.html" target="_blank">View Site ↗</a>
+            <a href="/api/admin/export-csv" class="btn btn-outline" style="padding: 0.45rem 1.2rem; font-size: 0.82rem;">📥 Export CSV</a>
+            <a href="#" onclick="logout()" class="btn btn-secondary" style="padding: 0.45rem 1.2rem; font-size: 0.82rem;">Sign Out</a>
+        </div>
+    </nav>
+
+    <div class="admin-wrapper">
+        <div class="section-header" style="text-align: left; margin-bottom: 2rem;">
+            <span class="badge-tag">Verification Portal</span>
+            <h2>Team Registrations &amp; Payment Verification</h2>
+            <p>Review submitted candidate information, verify payment proof, and authorize official campus entry passes.</p>
+        </div>
+
+        <!-- Metric KPI Cards -->
+        <div class="admin-stats-grid">
+            <div class="admin-stat-card">
+                <div style="font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase;">Total Registrations</div>
+                <div class="admin-stat-number" style="color: var(--primary);" id="statTotal">0</div>
+            </div>
+            <div class="admin-stat-card">
+                <div style="font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase;">Pending Approvals</div>
+                <div class="admin-stat-number" style="color: var(--warning);" id="statPending">0</div>
+            </div>
+            <div class="admin-stat-card">
+                <div style="font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase;">Approved Teams</div>
+                <div class="admin-stat-number" style="color: var(--success);" id="statApproved">0</div>
+            </div>
+            <div class="admin-stat-card">
+                <div style="font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase;">Discrepancies / Rejected</div>
+                <div class="admin-stat-number" style="color: var(--danger);" id="statRejected">0</div>
+            </div>
+        </div>
+
+        <!-- Controls Bar -->
+        <div class="admin-controls-bar">
+            <div style="display: flex; gap: 10px; flex: 1; max-width: 500px;">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search team, college, or member name..." oninput="filterTeams()">
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <select id="statusFilter" class="form-control" style="width: auto; padding-right: 2.2rem;" onchange="filterTeams()">
+                    <option value="all">All Registrations</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+                <button class="btn btn-outline" onclick="fetchTeams()">🔄 Refresh</button>
+                <a href="/api/admin/export-csv" class="btn btn-primary" download>📥 Export to CSV</a>
+            </div>
+        </div>
+
+        <!-- Table View -->
+        <div class="table-container">
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Pass / ID</th>
+                            <th>Team &amp; College</th>
+                            <th>Track</th>
+                            <th>Member 1 (Leader)</th>
+                            <th>Member 2</th>
+                            <th>Payment Proof</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teamsTableBody">
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 2rem;">Loading team records...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div class="modal-overlay" id="imageModal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h4 style="color: var(--primary); margin-bottom: 1rem;" id="modalTitle">Payment Receipt</h4>
+            <img id="modalImage" src="" alt="Payment Receipt Screenshot">
+        </div>
+    </div>
+
+    <!-- Bottom Corner "Developed by" Badge -->
+    <a href="https://frontierwox.in" target="_blank" class="developed-by-badge" title="Developed by FrontierWox Tech Private Limited">
+        <div class="dev-label">
+            <span class="dev-text">Developed by</span>
+            <span class="dev-company">FrontierWox</span>
+        </div>
+        <div class="dev-logo-container">
+            <img src="fwt.jpg" alt="FrontierWox Logo" class="dev-logo">
+        </div>
+    </a>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user || user.role !== 'admin') {
+            window.location.href = 'login.html';
+        }
+
+        let allTeams = [];
+
+        async function fetchTeams() {
+            try {
+                const res = await fetch('/api/admin/teams');
+                if (!res.ok) throw new Error('Failed to load registrations');
+                allTeams = await res.json();
+                updateStats();
+                filterTeams();
+            } catch (e) {
+                console.error(e);
+                alert('Error loading teams: ' + e.message);
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('statTotal').innerText = allTeams.length;
+            document.getElementById('statPending').innerText = allTeams.filter(t => t.status === 'pending').length;
+            document.getElementById('statApproved').innerText = allTeams.filter(t => t.status === 'approved').length;
+            document.getElementById('statRejected').innerText = allTeams.filter(t => t.status === 'rejected').length;
+        }
+
+        function filterTeams() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const status = document.getElementById('statusFilter').value;
+
+            const filtered = allTeams.filter(t => {
+                const matchesStatus = (status === 'all') || (t.status === status);
+                const matchesQuery = 
+                    (t.team_name && t.team_name.toLowerCase().includes(query)) ||
+                    (t.college && t.college.toLowerCase().includes(query)) ||
+                    (t.leader_name && t.leader_name.toLowerCase().includes(query)) ||
+                    (t.member2_name && t.member2_name.toLowerCase().includes(query)) ||
+                    (t.pass_id && t.pass_id.toLowerCase().includes(query));
+                
+                return matchesStatus && matchesQuery;
+            });
+
+            renderTable(filtered);
+        }
+
+        function renderTable(teams) {
+            const tbody = document.getElementById('teamsTableBody');
+            if (teams.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 2.5rem; color: var(--text-muted);">No matching registrations found.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = teams.map(t => {
+                const passId = t.pass_id || `HF26-${1000 + t.id}`;
+                return `
+                    <tr>
+                        <td>
+                            <strong style="color: var(--primary); font-family: 'Outfit';">${passId}</strong>
+                            <div style="font-size: 0.72rem; color: var(--text-muted);">#${t.id}</div>
+                        </td>
+                        <td>
+                            <strong style="color: #fff; font-size: 0.95rem;">${escapeHtml(t.team_name)}</strong>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">${escapeHtml(t.college)}</div>
+                        </td>
+                        <td>
+                            <span class="badge-tag">
+                                ${escapeHtml(t.track || 'General')}
+                            </span>
+                        </td>
+                        <td style="font-size: 0.82rem; line-height: 1.4;">
+                            <strong>${escapeHtml(t.leader_name)}</strong><br>
+                            <span style="color: var(--text-muted);">${escapeHtml(t.leader_dept || 'CS')}</span><br>
+                            <a href="tel:${t.leader_phone}" style="color: var(--primary); text-decoration: none;">📞 ${t.leader_phone || 'N/A'}</a><br>
+                            <span style="font-size: 0.74rem; color: var(--text-muted);">${escapeHtml(t.leader_email)}</span>
+                        </td>
+                        <td style="font-size: 0.82rem; line-height: 1.4;">
+                            <strong>${escapeHtml(t.member2_name)}</strong><br>
+                            <span style="color: var(--text-muted);">${escapeHtml(t.member2_dept || 'Commerce CA')}</span><br>
+                            <a href="tel:${t.member2_phone}" style="color: #a5b4fc; text-decoration: none;">📞 ${t.member2_phone || 'N/A'}</a><br>
+                            <span style="font-size: 0.74rem; color: var(--text-muted);">${escapeHtml(t.member2_email)}</span>
+                        </td>
+                        <td>
+                            ${t.payment_pic ? `
+                                <button class="btn btn-outline btn-sm" onclick="viewImage('/uploads/${t.payment_pic}', '${escapeHtml(t.team_name)}')">
+                                    📷 View Receipt
+                                </button>
+                                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Ref: ${escapeHtml(t.payment_ref || 'None')}</div>
+                            ` : '<span style="color: var(--danger);">No Receipt</span>'}
+                        </td>
+                        <td>
+                            <span class="status-chip ${t.status}" style="font-size: 0.72rem; padding: 4px 10px;">
+                                ${t.status.toUpperCase()}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="action-cell">
+                                ${t.status !== 'approved' ? `
+                                    <button class="btn btn-primary btn-sm" onclick="approveTeam(${t.id})">✓ Approve</button>
+                                ` : ''}
+                                ${t.status !== 'rejected' ? `
+                                    <button class="btn btn-outline btn-sm" style="color: var(--danger); border-color: rgba(239, 68, 68, 0.4);" onclick="rejectTeam(${t.id})">✕ Reject</button>
+                                ` : ''}
+                                <button class="btn btn-outline btn-sm" style="color: #94a3b8; border-color: rgba(255,255,255,0.12);" onclick="deleteTeam(${t.id}, '${escapeHtml(t.team_name)}')">🗑️</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function approveTeam(id) {
+            try {
+                const res = await fetch(`/api/admin/approve/${id}`, { method: 'POST' });
+                if (res.ok) {
+                    fetchTeams();
+                } else {
+                    alert('Failed to approve team');
+                }
+            } catch (e) {
+                alert('Error: ' + e.message);
+            }
+        }
+
+        async function rejectTeam(id) {
+            const reason = prompt('Enter committee rejection reason / note (visible to team):', 'Payment screenshot could not be verified.');
+            if (reason === null) return;
+
+            try {
+                const res = await fetch(`/api/admin/reject/${id}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ note: reason })
+                });
+                if (res.ok) {
+                    fetchTeams();
+                } else {
+                    alert('Failed to reject team');
+                }
+            } catch (e) {
+                alert('Error: ' + e.message);
+            }
+        }
+
+        async function deleteTeam(id, teamName) {
+            if (!confirm(`Are you sure you want to permanently delete team "${teamName}"?`)) return;
+
+            try {
+                const res = await fetch(`/api/admin/team/${id}`, { method: 'DELETE' });
+                if (res.ok) {
+                    fetchTeams();
+                } else {
+                    alert('Failed to delete team');
+                }
+            } catch (e) {
+                alert('Error: ' + e.message);
+            }
+        }
+
+        function viewImage(url, title) {
+            document.getElementById('modalImage').src = url;
+            document.getElementById('modalTitle').innerText = 'Payment Proof: ' + title;
+            document.getElementById('imageModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+
+        fetchTeams();
+    </script>
+</body>
+</html>

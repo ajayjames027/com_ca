@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Environment Variables
+.env
+
+# Logs
+*.log
+npm-debug.log*
+
+# Database & Uploads (optional local data)
+# Note: Keep uploads directory structure but ignore large local uploaded test images if desired:
+# uploads/*
+# !uploads/.gitkeep

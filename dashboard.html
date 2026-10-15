@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Dashboard &amp; Entry Pass | HACKFEST '26 - St. Joseph's College</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+</head>
+<body>
+    <div class="academic-bg"></div>
+
+    <div class="heritage-bar">
+        <span>🏛️ <strong>ST. JOSEPH'S COLLEGE (AUTONOMOUS)</strong> • Special Heritage Status Awarded by UGC</span>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html" class="nav-brand">
+            <img src="college_logo.png" alt="St. Joseph's College Crest" class="logo-college">
+            <div class="brand-divider"></div>
+            <div class="brand-details">
+                <span class="brand-title">HACKFEST <span class="year">'26</span></span>
+                <span class="brand-college">St. Joseph's College (Autonomous)</span>
+                <span class="brand-dept">Participant Portal</span>
+            </div>
+        </a>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="index.html#rules">Rules</a>
+            <a href="#" onclick="logout()" class="btn btn-outline" style="padding: 0.45rem 1.2rem; font-size: 0.82rem;">Sign Out</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <!-- Team Header -->
+        <div class="dash-header-card">
+            <div>
+                <span class="badge-academic" style="margin-bottom: 0.4rem;" id="passBadge">HF26</span>
+                <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.8rem; color: #fff;" id="teamHeaderName">Team Portal</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem;" id="collegeHeaderName">College Name</p>
+            </div>
+            <div style="text-align: right;">
+                <span class="status-chip pending" id="statusChip">PENDING</span>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Live Status</p>
+            </div>
+        </div>
+
+        <!-- PENDING VIEW -->
+        <div id="pendingView" style="display: none;">
+            <div class="rule-box" style="margin-bottom: 2rem; border-color: rgba(245, 158, 11, 0.3);">
+                <div class="rule-box-header">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    <h3 style="color: var(--warning);">Payment Verification in Progress</h3>
+                </div>
+                <p style="color: var(--text-sub); line-height: 1.6; margin-bottom: 1.2rem;">
+                    Your team registration details and payment screenshot are currently being verified by the organizing committee of the Department of Computer Science &amp; Commerce Computer Applications. 
+                    Once approved, your <strong>Official Campus Entry Pass &amp; ID Card</strong> will generate automatically below.
+                </p>
+                <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 1rem;">
+                    <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 4px;"><strong>Payment Reference:</strong> <span id="pendingRef" style="color: #fff;">N/A</span></p>
+                    <p style="font-size: 0.88rem; color: var(--text-muted);"><strong>Registered Track:</strong> <span id="pendingTrack" style="color: #fff;">General Application Development</span></p>
+                </div>
+            </div>
+
+            <!-- Committee Help Contacts -->
+            <div class="rule-box">
+                <h4 style="font-family: 'Plus Jakarta Sans', sans-serif; color: #fff; margin-bottom: 0.8rem;">Need Immediate Assistance?</h4>
+                <p style="color: var(--text-muted); font-size: 0.86rem; margin-bottom: 1.2rem;">
+                    You can contact the organizing coordinators directly:
+                </p>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <a href="tel:9629482064" class="btn btn-outline" style="font-size: 0.82rem; padding: 6px 14px;">Staff: Dr. B. Fatimamary (96294 82064)</a>
+                    <a href="tel:6381898996" class="btn btn-outline" style="font-size: 0.82rem; padding: 6px 14px;">Student: Mohamed Ismail (63818 98996)</a>
+                    <a href="tel:9626983425" class="btn btn-outline" style="font-size: 0.82rem; padding: 6px 14px;">Student: K Abinesh (96269 83425)</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- REJECTED VIEW -->
+        <div id="rejectedView" style="display: none;">
+            <div class="rule-box" style="border-color: rgba(239, 68, 68, 0.4); margin-bottom: 2rem;">
+                <div class="rule-box-header">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                    <h3 style="color: var(--danger);">Registration Under Review / Discrepancy</h3>
+                </div>
+                <p style="color: var(--text-sub); line-height: 1.6; margin-bottom: 1rem;">
+                    The committee was unable to approve this registration due to an issue with payment confirmation.
+                </p>
+                <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 10px; padding: 1rem; color: #fca5a5;">
+                    <strong>Committee Note:</strong> <span id="rejectedNote">Payment details could not be matched.</span>
+                </div>
+                <p style="margin-top: 1rem; font-size: 0.86rem; color: var(--text-muted);">
+                    Please contact Student Coordinators <strong>Mohamed Ismail (63818 98996)</strong> or <strong>K Abinesh (96269 83425)</strong> to resolve this.
+                </p>
+            </div>
+        </div>
+
+        <!-- APPROVED VIEW & OFFICIAL ACADEMIC ENTRY PASS -->
+        <div id="approvedView" style="display: none;">
+            <div style="text-align: center; margin-bottom: 1.8rem;">
+                <div class="badge-academic" style="background: rgba(16, 185, 129, 0.12); color: var(--success); border-color: rgba(16, 185, 129, 0.3);">
+                    ✓ Verification Approved • Official Pass Active
+                </div>
+                <h2 style="font-family: 'Outfit', sans-serif; font-size: 2rem; color: #fff; margin-bottom: 0.3rem;">
+                    Official Campus Entry Pass
+                </h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    Please print this official pass and bring it along with your college identity cards for entry at St. Joseph's College.
+                </p>
+                <div style="margin-top: 1.2rem;">
+                    <button class="btn btn-primary" onclick="window.print()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                        Print / Download ID Pass (PDF)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Printable Pass Card -->
+            <div class="pass-wrapper">
+                <div class="id-pass" id="printablePass">
+                    <!-- Pass Header -->
+                    <div class="pass-header">
+                        <img src="college_logo.png" alt="St. Joseph's College" class="pass-college-crest">
+                        <div class="pass-college-titles">
+                            <div class="pass-institution">ST. JOSEPH'S COLLEGE (AUTONOMOUS)</div>
+                            <div style="font-size: 0.72rem; color: #64748b; font-weight: 500;">Tiruchirappalli - 620 002, Tamil Nadu</div>
+                            <div class="pass-dept-line">DEPT. OF COMPUTER SCIENCE &amp; COMMERCE COMPUTER APPLICATIONS</div>
+                        </div>
+                    </div>
+
+                    <!-- Pass Badge Strip -->
+                    <div class="pass-event-badge">
+                        <div>
+                            <span style="font-size: 0.72rem; text-transform: uppercase; color: #94a3b8; display: block; line-height: 1;">Event Pass No</span>
+                            <span class="pass-id-num" id="cardPassId">HF26-1001</span>
+                        </div>
+                        <div style="text-align: right;">
+                            <span class="pass-verified-text">✓ VERIFIED &amp; APPROVED</span>
+                            <span style="font-size: 0.68rem; color: #94a3b8; display: block;">HACKFEST '26 OFFICIAL PASS</span>
+                        </div>
+                    </div>
+
+                    <!-- Pass Content -->
+                    <div class="pass-team-row">
+                        <div class="pass-label">Team Name</div>
+                        <div class="pass-team-name" id="cardTeamName">Team CyberKnights</div>
+                    </div>
+
+                    <div class="pass-team-row">
+                        <div class="pass-label">Institution / College</div>
+                        <div class="pass-college-name" id="cardCollege">College Name</div>
+                    </div>
+
+                    <div class="pass-team-row">
+                        <div class="pass-label">Assigned Track</div>
+                        <div style="font-size: 0.88rem; font-weight: 700; color: #0284c7;" id="cardTrack">Artificial Intelligence &amp; ML</div>
+                    </div>
+
+                    <!-- Two Participants Grid -->
+                    <div class="pass-participants-box">
+                        <div class="pass-member-box">
+                            <h5>Participant 1 (Team Leader)</h5>
+                            <div class="pass-member-name" id="cardM1Name">Member One</div>
+                            <div class="pass-member-meta" id="cardM1Dept">UG Computer Science</div>
+                            <div class="pass-member-meta" id="cardM1Phone">📞 9876543210</div>
+                        </div>
+
+                        <div class="pass-member-box">
+                            <h5 style="color: #4f46e5;">Participant 2</h5>
+                            <div class="pass-member-name" id="cardM2Name">Member Two</div>
+                            <div class="pass-member-meta" id="cardM2Dept">Commerce Computer Apps</div>
+                            <div class="pass-member-meta" id="cardM2Phone">📞 9876543211</div>
+                        </div>
+                    </div>
+
+                    <!-- Pass Footer & QR -->
+                    <div class="pass-footer-grid">
+                        <div class="pass-security-notice">
+                            <strong>⚠️ Mandatory Campus Entry Notice:</strong><br>
+                            Both participants must carry their original College Identity Cards along with this Pass for security clearance at the main gate.
+                        </div>
+                        <div class="pass-qr-frame">
+                            <canvas id="qrCanvas" style="width: 100%; height: 100%;"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="pass-bottom-credit">
+                        Organized by SJC Trichy • Portal Developed by FrontierWox Tech Pvt Ltd
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <button class="btn btn-outline" onclick="window.print()">
+                    🖨️ Print / Save Pass as PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-bottom" style="border: none; padding-top: 0;">
+            <p>&copy; 2026 Dept. of CS &amp; Commerce CA, St. Joseph's College (Autonomous), Tiruchirappalli.</p>
+            <p>Developed by <a href="https://frontierwox.in" target="_blank" style="color: var(--primary); text-decoration: none;">FrontierWox Tech Private Limited</a></p>
+        </div>
+    </footer>
+
+    <!-- Bottom Corner "Developed by" Badge -->
+    <a href="https://frontierwox.in" target="_blank" class="developed-by-badge" title="Developed by FrontierWox Tech Private Limited">
+        <div class="dev-label">
+            <span class="dev-text">Developed by</span>
+            <span class="dev-company">FrontierWox</span>
+        </div>
+        <div class="dev-logo-container">
+            <img src="fwt.jpg" alt="FrontierWox Logo" class="dev-logo">
+        </div>
+    </a>
+
+    <script>
+        const userStr = localStorage.getItem('user');
+        if (!userStr) {
+            window.location.href = 'login.html';
+        }
+
+        const user = JSON.parse(userStr);
+        if (user.role === 'admin') {
+            window.location.href = 'admin.html';
+        }
+
+        async function refreshTeamData() {
+            try {
+                const res = await fetch(`/api/team/status/${encodeURIComponent(user.team.team_name)}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    user.team = data.team;
+                    localStorage.setItem('user', JSON.stringify(user));
+                }
+            } catch (e) {
+                console.log('Cached team status loaded');
+            }
+
+            renderDashboard(user.team);
+        }
+
+        function renderDashboard(team) {
+            document.getElementById('teamHeaderName').innerText = team.team_name;
+            document.getElementById('collegeHeaderName').innerText = team.college;
+            
+            const passId = team.pass_id || `HF26-${1000 + team.id}`;
+            document.getElementById('passBadge').innerText = passId;
+
+            const statusChip = document.getElementById('statusChip');
+            statusChip.innerText = team.status.toUpperCase();
+            statusChip.className = 'status-chip ' + team.status;
+
+            const pendingView = document.getElementById('pendingView');
+            const rejectedView = document.getElementById('rejectedView');
+            const approvedView = document.getElementById('approvedView');
+
+            pendingView.style.display = 'none';
+            rejectedView.style.display = 'none';
+            approvedView.style.display = 'none';
+
+            if (team.status === 'approved') {
+                approvedView.style.display = 'block';
+
+                document.getElementById('cardPassId').innerText = passId;
+                document.getElementById('cardTeamName').innerText = team.team_name;
+                document.getElementById('cardCollege').innerText = team.college;
+                document.getElementById('cardTrack').innerText = team.track || 'General Application Development';
+
+                document.getElementById('cardM1Name').innerText = team.leader_name;
+                document.getElementById('cardM1Dept').innerText = team.leader_dept || 'Computer Science';
+                document.getElementById('cardM1Phone').innerText = '📞 ' + (team.leader_phone || 'N/A');
+
+                document.getElementById('cardM2Name').innerText = team.member2_name;
+                document.getElementById('cardM2Dept').innerText = team.member2_dept || 'Commerce CA';
+                document.getElementById('cardM2Phone').innerText = '📞 ' + (team.member2_phone || 'N/A');
+
+                // Generate QR Code
+                const qrCanvas = document.getElementById('qrCanvas');
+                const qrData = `HACKFEST '26 PASS\nPass: ${passId}\nTeam: ${team.team_name}\nCollege: ${team.college}\nLeader: ${team.leader_name}\nMember 2: ${team.member2_name}\nStatus: VERIFIED & APPROVED`;
+                
+                if (window.QRCode && qrCanvas) {
+                    QRCode.toCanvas(qrCanvas, qrData, {
+                        width: 60,
+                        margin: 0,
+                        color: {
+                            dark: '#0f172a',
+                            light: '#ffffff'
+                        }
+                    }, function (error) {
+                        if (error) console.error(error);
+                    });
+                }
+            } else if (team.status === 'rejected') {
+                rejectedView.style.display = 'block';
+                if (team.admin_notes) {
+                    document.getElementById('rejectedNote').innerText = team.admin_notes;
+                }
+            } else {
+                pendingView.style.display = 'block';
+                document.getElementById('pendingRef').innerText = team.payment_ref || 'Screenshot Uploaded';
+                document.getElementById('pendingTrack').innerText = team.track || 'General Track';
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+
+        refreshTeamData();
+    </script>
+</body>
+</html>
